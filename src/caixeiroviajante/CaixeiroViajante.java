@@ -34,14 +34,18 @@ public class CaixeiroViajante {
             }
         }
 
-        ArrayList<int[]> individuos = new ArrayList<>();
-        int k = 100;
-        int x = 10;
-        int q; // k indivíduos, x vezes pai e mãe, quantidade de gerações
-        Auxiliar aux = new Auxiliar(k, nVertex, individuos);
-        for (int i = 0; i < k; i++) {
-            aux.geraIndividuos();
-        }
-            aux.crossover(x);
+        int k = 10;// k indivíduos
+        int x = 10; // x vezes pai e mãe
+        int q = 5; // quantidade de indivíduos para mutações
+        int v = 4; // v qtd mutações por individuo
+
+        Auxiliar aux = new Auxiliar(k, nVertex, v, q, x, graph);
+
+        aux.geraIndividuos();
+        aux.crossover();
+        aux.mutacao();
+        aux.selecao();
+        aux.calcFitness();
+        aux.ordenaFitness();
     }
 }
