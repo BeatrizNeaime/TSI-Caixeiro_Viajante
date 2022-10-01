@@ -3,16 +3,16 @@ package caixeiroviajante;
 import java.util.*;
 
 public class Auxiliar {
-    int k, max, q, vezes, x;
+    int k, max, q, x, m;
     int[][] graph;
-    ArrayList<Individuo> individuos = new ArrayList<>();
+    ArrayList<Individuo> populacao = new ArrayList<>();
 
-    public Auxiliar(int k, int max, int vezes, int q, int x, int[][] graph) {
+    public Auxiliar(int k, int max, int q, int x, int m, int[][] graph) {
         this.k = k;
         this.max = max;
-        this.vezes = vezes;
         this.q = q;
         this.x = x;
+        this.m = m;
         this.graph = graph;
     }
 
@@ -37,25 +37,27 @@ public class Auxiliar {
         return numeros;
     }
 
-    public void geraIndividuos() {
-        for (int b = 0; b < k; b++) {
+    public void geraIndividuo() {
+        int atual = populacao.size();
+        System.out.println(k + " " + atual);
+        for (int b = 0; b < k - atual; b++) {
             int[] cromossomos = new int[max];
             int[] ns = listaPossivel();
             embaralhar(ns);
             for (int i = 0; i < max; i++) {
                 cromossomos[i] = ns[i];
             }
-            individuos.add(new Individuo(ns));
+            populacao.add(new Individuo(ns));
 
         }
         imprimir();
     }
 
     public void imprimir() {
-        System.out.println("---- POPULAÇÃO (" + individuos.size() + ") ----");
-        for (int i = 0; i < individuos.size(); i++) {
+        System.out.println("---- POPULAÇÃO (" + populacao.size() + ") ----");
+        for (int i = 0; i < populacao.size(); i++) {
             for (int j = 0; j < max; j++) {
-                System.out.print(individuos.get(i).getGenes()[j]);
+                System.out.print(populacao.get(i).getGenes()[j]);
             }
             System.out.println();
         }
@@ -76,8 +78,8 @@ public class Auxiliar {
             } while (nMae == nPai);
         }
 
-        pai = individuos.get(nPai).getGenes();
-        mae = individuos.get(nMae).getGenes();
+        pai = populacao.get(nPai).getGenes();
+        mae = populacao.get(nMae).getGenes();
 
         /* pai[0] - mãe [1] */
         pais.add(pai);
@@ -111,7 +113,7 @@ public class Auxiliar {
                     filho[i] = pais.get(1)[i];
             }
 
-            individuos.add(new Individuo(filho));
+            populacao.add(new Individuo(filho));
             System.out.println("----- novo individuo: -----");
             for (int i = 0; i < max; i++) {
                 System.out.print(filho[i]);
@@ -119,8 +121,6 @@ public class Auxiliar {
             System.out.println("\n\n");
         }
         System.out.println("---- FIM CROSSOVER ----");
-
-        imprimir();
     }
 
     public void mutacao() {
@@ -129,12 +129,12 @@ public class Auxiliar {
             /* SELECIONANDO */
             Random r = new Random();
             Random y = new Random();
-            int[] chosen = individuos.get(r.nextInt(individuos.size())).getGenes();
-            System.out.println("Escolhido para mutação:");
-            for (int i = 0; i < max; i++) {
-                System.out.print(chosen[i]);
-            }
-            System.out.println();
+            int[] chosen = populacao.get(r.nextInt(populacao.size())).getGenes();
+            // System.out.println("Escolhido para mutação:");
+            // for (int i = 0; i < max; i++) {
+            //     System.out.print(chosen[i]);
+            // }
+            // System.out.println();
 
             /* MUTAÇÃO */
             int aux = 0, aux2 = 0;
@@ -147,36 +147,53 @@ public class Auxiliar {
             chosen[ale] = aux2;
             chosen[ale2] = aux;
 
-            System.out.println("Após mutação:");
-            for (int i = 0; i < max; i++) {
-                System.out.print(chosen[i]);
-            }
-            System.out.println();
+            // System.out.println("Após mutação:");
+            // for (int i = 0; i < max; i++) {
+            //     System.out.print(chosen[i]);
+            // }
+            // System.out.println();
 
         }
 
         System.out.println("---- FIM MUTAÇÃO ----");
-        imprimir();
     }
 
     public void selecao() {
         ArrayList<Individuo> eliminar = new ArrayList<>();
         System.out.println("---- SELEÇÃO ----");
-        for (int i = 0; i < individuos.size(); i++) { // pega posição no arraylist
+        int last = max - 1;
+
+        for (int i = 0; i < populacao.size(); i++) { // pega posição no arraylist
+            if(verificaNext(populacao.get(i).getGenes()[last], populacao.get(i).getGenes()[0])){
+                eliminar.add(populacao.get(i));
+            }
             for (int j = 0; j < max; j++) { // posição o vetor
                 for (int k = j + 1; k < max; k++) { // verifica o próximo
-                    if (individuos.get(i).getGenes()[j] == individuos.get(i).getGenes()[k]) {
-                        eliminar.add(individuos.get(i));
+                    if (populacao.get(i).getGenes()[j] == populacao.get(i).getGenes()[k]) {
+                        eliminar.add(populacao.get(i));
                         break;
                     }
                 }
+            }
+
+            for (int k = 1; k < max; k++) {
+                if (verificaNext(populacao.get(i).getGenes()[k - 1], populacao.get(i).getGenes()[k])) {
+                    eliminar.add(populacao.get(i));
+                }
+
             }
         }
 
         int tamInvalid = eliminar.size();
         eliminaInvalid(tamInvalid, eliminar);
         System.out.println("---- FIM SELEÇÃO ----");
-        imprimir();
+    }
+
+    public boolean verificaNext(int x, int y) {
+        if (pegaMatriz(x, y) == 0) {
+            return true;
+        }
+        return false;
     }
 
     public void eliminaInvalid(int tam, ArrayList<Individuo> eli) {
@@ -190,9 +207,9 @@ public class Auxiliar {
         }
 
         for (int i = 0; i < tam; i++) {
-            for (int j = 0; j < individuos.size(); j++) {
-                if (individuos.get(j) == eli.get(i)) {
-                    individuos.remove(j);
+            for (int j = 0; j < populacao.size(); j++) {
+                if (populacao.get(j) == eli.get(i)) {
+                    populacao.remove(j);
                 }
             }
         }
@@ -201,34 +218,58 @@ public class Auxiliar {
 
     public void calcFitness() {
         System.out.println("FITNESS");
-        for (int i = 0; i < individuos.size(); i++) {
+        for (int i = 0; i < populacao.size(); i++) {
             int soma = 0;
             for (int k = 1; k < max; k++) {
-                soma += pegaMatriz(individuos.get(i).getGenes()[k - 1], individuos.get(i).getGenes()[k]);
+                soma += pegaMatriz(populacao.get(i).getGenes()[k - 1], populacao.get(i).getGenes()[k]);
             }
-            
-            individuos.get(i).setFitness(soma);
-            System.out.print("--------\nIndividuo: ");
-            for (int j = 0; j < max; j++) {
-                System.out.print(individuos.get(i).getGenes()[j]);
-            }
-            System.out.println("\nFitness: "+ individuos.get(i).getFitness());
-        }  
+
+            soma += pegaMatriz(populacao.get(i).getGenes()[max - 1], populacao.get(i).getGenes()[0]);
+
+            populacao.get(i).setFitness(soma);
+        }
     }
 
     public int pegaMatriz(int x, int y) {
         return graph[x][y];
     }
 
-    public void ordenaFitness(){
-        individuos.sort(Comparator.comparing(Individuo::getFitness));
-        System.out.println("--- ORDENANDO O FITNESS ----");
-        for(int i=0;i<individuos.size();i++){
-            for(int j=0;j<max;j++){
-                System.out.print(individuos.get(i).getGenes()[j]);
+    public void ordenaFitness() {
+        populacao.sort(Comparator.comparing(Individuo::getFitness));
+        System.out.println("--- ORDENANDO BASEADO NO FITNESS ----");
+        exibeFitness();
+    }
+
+    public void geraNext() {
+        ArrayList<Individuo> next = new ArrayList<>();
+        int por = (populacao.size() * m) / 100;
+        System.out.println("PASSAM " + por + " INDIVÍDUOS PARA A PRÓXIMA GERAÇÃO");
+        for (int i = 0; i < por; i++) {
+            next.add(populacao.get(i));
+        }
+        populacao.clear();
+        for (int i = 0; i < por; i++) {
+            populacao.add(next.get(i));
+        }
+        next.clear();
+        imprimir();
+    }
+
+    public void exibeFitness() {
+        for (int i = 0; i < populacao.size(); i++) {
+            for (int j = 0; j < max; j++) {
+                System.out.print(populacao.get(i).getGenes()[j]);
             }
+            System.out.print(" - fitness: " + populacao.get(i).getFitness());
             System.out.println();
         }
+    }
+
+    public void theEnd(){
+        for(int i=0;i<max;i++){
+            System.out.print(populacao.get(0).getGenes()[i] + " ");
+        }
+        System.out.println("\nFitness: " + populacao.get(0).getFitness());
     }
 
 }
