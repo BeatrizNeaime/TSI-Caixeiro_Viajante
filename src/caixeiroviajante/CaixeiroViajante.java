@@ -15,7 +15,6 @@ public class CaixeiroViajante {
     }
 
     public static void main(String[] args) {
-        // TODO code application logic here
 
         FileManager fileManager = new FileManager();
         ArrayList<String> text = fileManager.stringReader("./data/Teste_4.txt");
@@ -44,29 +43,27 @@ public class CaixeiroViajante {
 
         int k = 10000; // k indivíduos
         int x = k/10; // x vezes pai e mãe
-        int q = 6000; // quantidade de indivíduos para mutações (60%)
+        int q = 7000; // quantidade de indivíduos para mutações (60%)
         int m = 40; // porcentagem pra próx geração
-        int g = 10; // gerações
+        int g = 15; // gerações
 
         Auxiliar aux = new Auxiliar(k, nVertex, q, x, m, graph);
-        show_matrix(graph);
+        //show_matrix(graph);
 
         long to = System.currentTimeMillis();
-
         for (int i = 0; i < g; i++) {
-            System.out.println("----- GERAÇÃO " + g + " -----");
+            System.out.println("----- GERAÇÃO " + i + " -----");
             aux.geraIndividuo();
             aux.crossover();
             aux.mutacao();
             aux.selecao();
             aux.calcFitness();
-            aux.ordenaFitness();
             aux.geraNext();
         }
         long tf = System.currentTimeMillis();
-        System.out.println(">>> FIM DE " + g + " GERAÇÕES");
+        System.out.println("\n\n>>> FIM DE " + g + " GERAÇÕES");
         
-        System.out.println("\n\nConfiguração:\nVértices: "+nVertex+"\nPopulação inicial: " + k+ "\nCrossover: " + x + "\nIndivíduos separados para mutação: " + q + "\nPassaram para a próxima geração: " + m + "%\nGerações: " + g);
+        System.out.println("\nConfiguração utilizada:\nVértices: "+nVertex+"\nPopulação inicial: " + k+ "\nCrossover: " + x + "\nIndivíduos separados para mutação: " + q + "\nPassaram para a próxima geração: " + m + "%\nGerações: " + g);
         System.out.println("Tempo de execução: " + (tf-to) + "ms");
         System.out.println(">>> MELHOR RESULTADO: ");
         aux.theEnd();
