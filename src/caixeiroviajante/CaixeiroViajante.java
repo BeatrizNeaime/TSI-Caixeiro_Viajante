@@ -36,10 +36,10 @@ public class CaixeiroViajante {
     public static void main(String[] args) {
 
         FileManager fileManager = new FileManager();
-        ArrayList<String> text = fileManager.stringReader("./data/Teste_3.txt");
+        ArrayList<String> text = fileManager.stringReader("./data/Teste.txt");
 
         int nVertex = 0;   
-        int graph[][] = null;
+        int graph[][] = null; 
 
         for (int i = 0; i < text.size(); i++) {
             String line = text.get(i);
@@ -58,7 +58,7 @@ public class CaixeiroViajante {
                      * ADICIONAR A ARESTA À REPRESENTAÇÃO
                      */
                     graph[oriVertex][targetVertex] = weight;
-                    graph[targetVertex][oriVertex] = weight;
+                    graph[targetVertex][oriVertex] = weight; 
                 }
             }
         }
@@ -66,11 +66,11 @@ public class CaixeiroViajante {
         clear_matrix(graph);
         show_matrix(graph);
 
-        // ArrayList<Vertice> vertices = new ArrayList<Vertice>();
+        ArrayList<Vertice> vertices = new ArrayList<Vertice>();
 
-        // for (int i = 0; i < graph.length; i++) {
-        //     vertices.add(new Vertice(i));
-        // }
+        for (int i = 0; i < graph.length; i++) {
+            vertices.add(new Vertice(i));
+        }
 
         // /* ---- PEGAR VÉRTICES ADJACENTES ---- */
         // pega_Adjs(graph, vertices);
@@ -84,8 +84,9 @@ public class CaixeiroViajante {
         //vertices.get(0).zeraVisitados(vertices.get(0));
         //vertices.get(0).buscaLArgura(vertices.get(0));
         
-        Teste t = new Teste(graph);
-        t.help(0);
+        Permuta p = new Permuta(graph);
+        p.permuta(vertices);
+        //p.colar();
     }
 
 }

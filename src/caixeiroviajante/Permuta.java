@@ -1,19 +1,18 @@
 package caixeiroviajante;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Permuta {
 
-    private int cont = 0, flag = 0;;
+    private int cont = 0;
     private int[] p;
     private int[] melhor;
     private int melhorCaminho;
     private ArrayList<int[]> caminhos = new ArrayList<int[]>();
+    int graph[][];
 
-
-    public Permuta (){
-
+    public Permuta(int graph[][]) {
+        this.graph = graph;
     }
 
     public void permuta(ArrayList<Vertice> vs) {
@@ -23,17 +22,10 @@ public class Permuta {
     }
 
     public void permuta(ArrayList<Vertice> vs, int n, int vertice) {
-        if (n == vs.size() && p[0] == 0) {
+        if (n == vs.size()) {
             cont++;
             imprime();
-            // caminhos.add(flag, p);
-            //if (somatorioCaminho() < melhorCaminho){
-            //     melhorCaminho = somatorioCaminho();
-            //     melhor = Arrays.copyOf(p, p.length);
-            // }
-            flag++;
-            System.out.println("Flag: " + flag);
-        } else {
+        } else { 
             for (int i = 0; i < vs.size(); i++) { // ao inves de enviar pra todos, enviar para os adjacentes
                 boolean found = false;
                 for (int j = 0; j < n; j++) {
@@ -54,14 +46,19 @@ public class Permuta {
     public void imprime() {
         System.out.println();
         System.out.print("(" + cont + "): ");
+        caminhos.add(p);
         for (int i = 0; i < p.length; i++) {
-
             System.out.print(p[i] + " ");
         }
     }
 
     public void colar() {
-            System.out.println("Posição: " + flag + " " + caminhos.get(0)[flag-1]);
+        for (int i = 0; i < caminhos.size(); i++) {
+            for (int j = 0; j < graph.length; j++) {
+                System.out.print(caminhos.get(i)[j]);
+            }
+            System.out.println();
+        }
 
     }
 }
