@@ -108,21 +108,23 @@ public class Auxiliar {
     public void mutacao() {
         System.out.println("---- MUTAÇÃO (" + q + ") ----");
         for (int a = 0; a < q; a++) {
-            /* SELECIONANDO */
             Random r = new Random();
-            Random y = new Random();
             int[] chosen = populacao.get(r.nextInt(populacao.size())).getGenes();
+            /* SELECIONANDO */
+            for (int i = 0; i < 5; i++) {
+                Random y = new Random();
 
-            /* MUTAÇÃO */
-            int aux = 0, aux2 = 0;
-            int ale, ale2;
-            ale = y.nextInt(max);
-            ale2 = y.nextInt(max);
-            aux = chosen[ale];
-            aux2 = chosen[ale2];
+                /* MUTAÇÃO */
+                int aux = 0, aux2 = 0;
+                int ale, ale2;
+                ale = y.nextInt(max);
+                ale2 = y.nextInt(max);
+                aux = chosen[ale];
+                aux2 = chosen[ale2];
 
-            chosen[ale] = aux2;
-            chosen[ale2] = aux;
+                chosen[ale] = aux2;
+                chosen[ale2] = aux;
+            }
 
         }
 

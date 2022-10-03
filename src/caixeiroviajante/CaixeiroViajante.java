@@ -42,14 +42,13 @@ public class CaixeiroViajante {
         }
 
         int k = 10000; // k indivíduos
-        int x = k/10; // x vezes pai e mãe
-        int q = 7000; // quantidade de indivíduos para mutações (60%)
-        int m = 40; // porcentagem pra próx geração
-        int g = 15; // gerações
+        int x = k / 10; // x vezes pai e mãe
+        int q = (k * 40) / 100; // quantidade de indivíduos para mutações
+        int m = 70; // porcentagem pra próx geração
+        int g = 20; // gerações
 
         Auxiliar aux = new Auxiliar(k, nVertex, q, x, m, graph);
-        //show_matrix(graph);
-
+        // show_matrix(graph);
         long to = System.currentTimeMillis();
         for (int i = 0; i < g; i++) {
             System.out.println("----- GERAÇÃO " + i + " -----");
@@ -62,9 +61,11 @@ public class CaixeiroViajante {
         }
         long tf = System.currentTimeMillis();
         System.out.println("\n\n>>> FIM DE " + g + " GERAÇÕES");
-        
-        System.out.println("\nConfiguração utilizada:\nVértices: "+nVertex+"\nPopulação inicial: " + k+ "\nCrossover: " + x + "\nIndivíduos separados para mutação: " + q + "\nPassaram para a próxima geração: " + m + "%\nGerações: " + g);
-        System.out.println("Tempo de execução: " + (tf-to) + "ms");
+
+        System.out.println("\nConfiguração utilizada:\nVértices: " + nVertex + "\nPopulação inicial: " + k
+                + "\nCrossover: " + x + "\nIndivíduos separados para mutação: " + q
+                + "\nPassaram para a próxima geração: " + m + "%\nGerações: " + g);
+        System.out.println("Tempo de execução: " + (tf - to) + "ms");
         System.out.println(">>> MELHOR RESULTADO: ");
         aux.theEnd();
     }
